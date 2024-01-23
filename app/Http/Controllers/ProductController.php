@@ -14,27 +14,26 @@ class ProductController extends Controller
 
         return response()->json(["data" => $products]);
     }
-
     public function store(Request $request)
     {
-        // Validation rules
         $request->validate([
             "nameProduct" => "required",
             "stock"       => "required|numeric|min:1",
             "price"       => "required|numeric|min:1",
+            "campaign_id" => "required|exists:campaigns,id",
         ]);
 
-            // Data storage logic here
-            $product = Product::create([
-                "productID"   => strtoupper(substr($request->input("nameProduct"), 0, 3)) . rand(1000, 9999),
-                "nameProduct"=> $request->input("nameProduct"),
-                "stock"       => $request->input("stock"),
-                "price"       => $request->input("price"),
-            ]);
+        $product = Product::create([
+            "productID"   => strtoupper(substr($request->input("nameProduct"), 0, 3)) . rand(1000, 9999),
+            "nameProduct" => $request->input("nameProduct"),
+            "stock"       => $request->input("stock"),
+            "price"       => $request->input("price"),
+            "campaign_id" => $request->input("campaign_id"),
+        ]);
 
-            return response()->json(["message" => "Product created successfully", "data" => $product], 201);
-
+        return response()->json(["message" => "Product created successfully", "data" => $product], 201);
     }
+
 
     public function update(Request $request, $id)
     {
